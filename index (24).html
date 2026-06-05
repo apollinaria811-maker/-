@@ -1,0 +1,407 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Subtext — Вход</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600&family=Poppins:wght@400;500;600&display=swap" rel="stylesheet">
+
+<style>
+:root {
+  --lamp-on: 0;
+  --bg-deep: #07192f;
+  --text: #14324a;
+  --muted: #5d7890;
+  --blue: #1677ff;
+  --blue-dark: #0757c7;
+  --cyan: #35d8ff;
+  --aqua: #6ee7ff;
+  --card: rgba(255, 255, 255, 0.78);
+  --line: rgba(125, 205, 255, 0.34);
+  --shadow: 0 26px 80px rgba(3, 35, 74, 0.28);
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  min-height: 100vh;
+  font-family: 'Poppins', sans-serif;
+  color: #fff;
+  background:
+    radial-gradient(circle at 50% 0%, rgba(53, 216, 255, 0.08), transparent 32rem),
+    radial-gradient(circle at 12% 18%, rgba(22, 119, 255, 0.08), transparent 28rem),
+    linear-gradient(135deg, #061326 0%, #07192f 52%, #0e3a66 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  transition: background 0.7s ease;
+}
+
+body[data-on="true"] {
+  background:
+    radial-gradient(circle at 18% 12%, rgba(53, 216, 255, 0.34), transparent 30rem),
+    radial-gradient(circle at 88% 5%, rgba(22, 119, 255, 0.24), transparent 28rem),
+    linear-gradient(180deg, #f8fdff 0%, #eaf7ff 48%, #dff3ff 100%);
+  color: var(--text);
+}
+
+body::before,
+body::after {
+  content: "";
+  position: fixed;
+  pointer-events: none;
+  border-radius: 999px;
+  z-index: 0;
+}
+
+body::before {
+  width: 520px;
+  height: 520px;
+  left: -180px;
+  bottom: -190px;
+  background: radial-gradient(circle, rgba(110, 231, 255, 0.36), transparent 68%);
+  opacity: calc(0.18 + var(--lamp-on) * 0.62);
+  filter: blur(3px);
+}
+
+body::after {
+  width: 460px;
+  height: 460px;
+  right: -150px;
+  top: -140px;
+  background: radial-gradient(circle, rgba(22, 119, 255, 0.3), transparent 70%);
+  opacity: calc(0.2 + var(--lamp-on) * 0.58);
+  filter: blur(4px);
+}
+
+.page-shell {
+  position: relative;
+  z-index: 1;
+  width: min(980px, calc(100% - 32px));
+  min-height: 640px;
+  display: grid;
+  place-items: center;
+  padding: 7rem 0 3rem;
+}
+
+.orb {
+  position: absolute;
+  border-radius: 50%;
+  background: linear-gradient(135deg, rgba(53, 216, 255, 0.2), rgba(255, 255, 255, 0.08));
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.22), 0 18px 54px rgba(4, 44, 86, 0.2);
+  backdrop-filter: blur(10px);
+  opacity: calc(0.18 + var(--lamp-on) * 0.6);
+  animation: float 8s ease-in-out infinite;
+}
+
+.orb-1 { width: 130px; height: 130px; left: 6%; top: 22%; }
+.orb-2 { width: 86px; height: 86px; right: 8%; top: 30%; animation-delay: -2.6s; }
+.orb-3 { width: 64px; height: 64px; right: 24%; bottom: 15%; animation-delay: -4.8s; }
+
+@keyframes float {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-18px); }
+}
+
+/* ===== ЛАМПА ===== */
+.lamp-wrap {
+  position: absolute;
+  top: 34px;
+  left: 50%;
+  transform: translateX(-50%);
+  text-align: center;
+  cursor: pointer;
+  user-select: none;
+  z-index: 3;
+}
+
+.lamp-shell {
+  width: 96px;
+  height: 96px;
+  display: grid;
+  place-items: center;
+  margin: 0 auto;
+  border: 1px solid rgba(255, 255, 255, 0.32);
+  border-radius: 50%;
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.18), rgba(255, 255, 255, 0.06));
+  box-shadow:
+    0 0 calc(42px * var(--lamp-on)) rgba(53, 216, 255, 0.72),
+    0 20px 46px rgba(3, 35, 74, 0.22),
+    inset 0 1px 0 rgba(255, 255, 255, 0.34);
+  backdrop-filter: blur(14px);
+  transition: transform 0.35s ease, box-shadow 0.35s ease;
+}
+
+.lamp {
+  font-size: 3.9rem;
+  transition: transform 0.35s ease, filter 0.35s ease;
+  filter: drop-shadow(0 0 calc(28px * var(--lamp-on)) rgba(53, 216, 255, 0.8));
+}
+
+.switch {
+  margin-top: 0.75rem;
+  padding: 0.45rem 0.85rem;
+  border: 1px solid rgba(255, 255, 255, 0.26);
+  border-radius: 999px;
+  color: rgba(255, 255, 255, 0.82);
+  font-size: 0.78rem;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  background: rgba(4, 48, 93, 0.28);
+  backdrop-filter: blur(12px);
+  transition: color 0.35s ease, background 0.35s ease, border-color 0.35s ease;
+}
+
+body[data-on="true"] .switch {
+  color: var(--blue-dark);
+  border-color: rgba(22, 119, 255, 0.16);
+  background: rgba(255, 255, 255, 0.72);
+}
+
+.lamp-wrap:hover .lamp-shell { transform: translateY(-4px) scale(1.04); }
+.lamp-wrap:hover .lamp { transform: rotate(-7deg) scale(1.04); }
+
+/* ===== CARD ===== */
+.card {
+  position: relative;
+  width: 100%;
+  max-width: 440px;
+  padding: 3rem 2.5rem 2.5rem;
+  border: 1px solid rgba(255, 255, 255, 0.72);
+  border-radius: 32px;
+  background: var(--card);
+  color: var(--text);
+  text-align: center;
+  box-shadow: var(--shadow);
+  backdrop-filter: blur(22px);
+  opacity: 0;
+  transform: translateY(22px) scale(0.98);
+  pointer-events: none;
+  transition: opacity 0.65s ease, transform 0.65s ease, box-shadow 0.3s ease;
+}
+
+.card::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  background: radial-gradient(circle at top left, rgba(53, 216, 255, 0.28), transparent 48%);
+  pointer-events: none;
+}
+
+.card::after {
+  content: "Личный кабинет ученика";
+  position: absolute;
+  top: -16px;
+  left: 50%;
+  transform: translateX(-50%);
+  white-space: nowrap;
+  padding: 0.5rem 0.95rem;
+  border: 1px solid rgba(22, 119, 255, 0.16);
+  border-radius: 999px;
+  color: var(--blue-dark);
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  background: rgba(255, 255, 255, 0.86);
+  box-shadow: 0 12px 28px rgba(22, 119, 255, 0.14);
+}
+
+body[data-on="true"] .card {
+  opacity: 1;
+  transform: translateY(0) scale(1);
+  pointer-events: auto;
+}
+
+.card:hover {
+  box-shadow: 0 30px 90px rgba(3, 35, 74, 0.32);
+}
+
+/* ===== TEXT ===== */
+.logo {
+  position: relative;
+  font-family: 'Playfair Display', serif;
+  font-size: clamp(3.2rem, 12vw, 4.3rem);
+  color: rgba(255, 255, 255, 0.96);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  text-shadow:
+    0 4px 0 rgba(5, 54, 111, 0.78),
+    0 18px 42px rgba(0, 24, 54, 0.28),
+    0 0 34px rgba(110, 231, 255, 0.38);
+  margin-bottom: 0.35rem;
+}
+
+.subtitle {
+  position: relative;
+  color: var(--muted);
+  font-size: 0.96rem;
+  margin-bottom: 2.3rem;
+}
+
+.form-wrap {
+  position: relative;
+}
+
+input {
+  width: 100%;
+  padding: 1rem 1.2rem;
+  border: 1px solid rgba(22, 119, 255, 0.18);
+  border-radius: 999px;
+  color: var(--text);
+  font-size: 1rem;
+  outline: none;
+  text-align: center;
+  margin-bottom: 1rem;
+  background: rgba(255, 255, 255, 0.84);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.8), 0 10px 26px rgba(7, 42, 83, 0.08);
+  transition: border-color 0.24s ease, box-shadow 0.24s ease, transform 0.24s ease;
+}
+
+input::placeholder { color: rgba(93, 120, 144, 0.72); }
+
+input:focus {
+  border-color: rgba(22, 119, 255, 0.62);
+  box-shadow: 0 0 0 5px rgba(53, 216, 255, 0.14), 0 14px 30px rgba(22, 119, 255, 0.12);
+  transform: translateY(-1px);
+}
+
+button {
+  position: relative;
+  width: 100%;
+  overflow: hidden;
+  padding: 1rem;
+  border: none;
+  border-radius: 999px;
+  color: #fff;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  cursor: pointer;
+  background: linear-gradient(135deg, var(--blue-dark), var(--blue) 55%, var(--cyan));
+  box-shadow: 0 14px 32px rgba(22, 119, 255, 0.28);
+  transition: transform 0.25s ease, box-shadow 0.25s ease, filter 0.25s ease;
+}
+
+button::after {
+  content: "";
+  position: absolute;
+  top: -80%;
+  left: -35%;
+  width: 46px;
+  height: 240%;
+  background: rgba(255, 255, 255, 0.48);
+  transform: rotate(24deg) translateX(-120px);
+  transition: transform 0.58s ease;
+}
+
+button:hover,
+button:focus-visible {
+  transform: translateY(-3px) scale(1.01);
+  box-shadow: 0 20px 48px rgba(22, 119, 255, 0.36), 0 0 0 6px rgba(53, 216, 255, 0.12);
+  filter: saturate(1.08);
+  outline: none;
+}
+
+button:hover::after,
+button:focus-visible::after { transform: rotate(24deg) translateX(360px); }
+
+.error {
+  min-height: 1.25em;
+  margin-top: 1rem;
+  color: #d82f5a;
+  font-size: 0.86rem;
+  font-weight: 600;
+}
+
+.hint {
+  margin-top: 1.45rem;
+  color: var(--muted);
+  font-size: 0.76rem;
+  opacity: 0.86;
+}
+
+@media (max-width: 640px) {
+  body { overflow-y: auto; }
+  .page-shell { min-height: 100vh; padding: 8rem 0 2rem; }
+  .lamp-wrap { top: 24px; }
+  .lamp-shell { width: 82px; height: 82px; }
+  .lamp { font-size: 3.25rem; }
+  .card { padding: 2.7rem 1.35rem 2rem; border-radius: 26px; }
+  .card::after { font-size: 0.62rem; }
+}
+</style>
+</head>
+
+<body data-on="false">
+
+<div class="page-shell">
+  <div class="orb orb-1"></div>
+  <div class="orb orb-2"></div>
+  <div class="orb orb-3"></div>
+
+  <!-- ЛАМПА -->
+  <div class="lamp-wrap" onclick="toggleLamp()">
+    <div class="lamp-shell">
+      <div class="lamp">💡</div>
+    </div>
+    <div class="switch">включить свет</div>
+  </div>
+
+  <!-- CARD -->
+  <div class="card">
+    <div class="logo">Subtext</div>
+    <div class="subtitle">Введите ID, чтобы открыть личный кабинет</div>
+
+    <div class="form-wrap">
+      <input type="text" id="idInput" placeholder="Введите ваш ID">
+      <button onclick="enterById()">Войти</button>
+    </div>
+
+    <div id="errorMsg" class="error"></div>
+    <div class="hint">ID выдаётся преподавателем</div>
+  </div>
+</div>
+
+<script>
+const API_URL = "https://script.google.com/macros/s/AKfycbwUn_cmSNazJrz8qswX_4AZYl9UYYLiVGsej6g2d2Bn698IOe6M4f6EozI_VK_kF-RZ/exec";
+let isOn = false;
+const root = document.documentElement;
+const body = document.body;
+
+function toggleLamp() {
+  isOn = !isOn;
+  body.setAttribute("data-on", isOn);
+  root.style.setProperty("--lamp-on", isOn ? 1 : 0);
+}
+
+async function enterById() {
+  const id = idInput.value.trim();
+  errorMsg.textContent = "";
+
+  if (!id) {
+    errorMsg.textContent = "Введите ID";
+    return;
+  }
+
+  try {
+    const res = await fetch(`${API_URL}?action=check_user&userId=${encodeURIComponent(id)}`);
+    const data = await res.json();
+
+    if (data.success) {
+      window.location.href = `lk.html?id=${encodeURIComponent(id)}`;
+    } else {
+      errorMsg.textContent = "Пользователь не зарегистрирован";
+    }
+  } catch {
+    errorMsg.textContent = "Ошибка соединения";
+  }
+}
+</script>
+
+</body>
+</html>
