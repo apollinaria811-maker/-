@@ -1,0 +1,1217 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Subtext — Личный кабинет</title>
+
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600&family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+  <style>
+    :root {
+      --ink: #0b2341;
+      --muted: #5f7f9a;
+      --deep: #06142b;
+      --night: #09244a;
+      --blue: #1677ff;
+      --blue-2: #4aa3ff;
+      --cyan: #35d8ff;
+      --ice: #eefaff;
+      --glass: rgba(255, 255, 255, 0.74);
+      --glass-strong: rgba(255, 255, 255, 0.9);
+      --line: rgba(91, 190, 255, 0.28);
+      --shadow: 0 24px 70px rgba(6, 35, 75, 0.18);
+      --shadow-strong: 0 34px 90px rgba(5, 32, 72, 0.28);
+      --radius-xl: 34px;
+      --radius-lg: 26px;
+      --radius-md: 18px;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+
+    body {
+      min-height: 100vh;
+      font-family: 'Poppins', sans-serif;
+      color: var(--ink);
+      background:
+        radial-gradient(circle at 12% 8%, rgba(53, 216, 255, 0.34), transparent 28rem),
+        radial-gradient(circle at 90% 12%, rgba(22, 119, 255, 0.22), transparent 30rem),
+        radial-gradient(circle at 70% 92%, rgba(74, 163, 255, 0.18), transparent 34rem),
+        linear-gradient(180deg, #f9fdff 0%, #eaf8ff 43%, #dcefff 100%);
+      overflow-x: hidden;
+    }
+
+    body::before,
+    body::after {
+      content: "";
+      position: fixed;
+      pointer-events: none;
+      z-index: -1;
+      border-radius: 999px;
+      filter: blur(5px);
+    }
+
+    body::before {
+      width: 520px;
+      height: 520px;
+      left: -190px;
+      bottom: -130px;
+      background: radial-gradient(circle, rgba(53, 216, 255, 0.32), transparent 68%);
+    }
+
+    body::after {
+      width: 440px;
+      height: 440px;
+      right: -160px;
+      top: 260px;
+      background: radial-gradient(circle, rgba(22, 119, 255, 0.2), transparent 70%);
+    }
+
+    .hidden { display: none !important; }
+    a { color: var(--blue); }
+
+    hr {
+      height: 1px;
+      margin: 1.5rem 0;
+      border: 0;
+      background: linear-gradient(90deg, transparent, rgba(22, 119, 255, 0.24), transparent);
+    }
+
+    #loading {
+      width: min(420px, calc(100% - 32px));
+      margin: 2rem auto;
+      padding: 1.25rem 1.5rem;
+      border: 1px solid var(--line);
+      border-radius: var(--radius-lg);
+      color: var(--blue);
+      text-align: center;
+      font-weight: 700;
+      background: var(--glass-strong);
+      box-shadow: var(--shadow);
+      backdrop-filter: blur(18px);
+    }
+
+    /* ===== HEADER / AURORA ===== */
+    .hero {
+      position: relative;
+      isolation: isolate;
+      min-height: 330px;
+      display: grid;
+      place-items: center;
+      overflow: hidden;
+      border-bottom-left-radius: 54px;
+      border-bottom-right-radius: 54px;
+      background:
+        linear-gradient(135deg, rgba(4, 22, 49, 0.78), rgba(22, 119, 255, 0.48)),
+        url('https://cdn.qwenlm.ai/output/26e59e0c-c12d-470e-9e9d-ead84f166378/t2i/a16a1240-e568-4c39-8993-f9b94b1f3ad3/1769081334.png?key=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJyZXNvdXJjZV91c2VyX2lkIjoiMjZlNTllMGMtYzEyZC00NzBlLTllOWQtZWFkODRmMTY2Mzc4IiwicmVzb3VyY2VfaWQiOiIxNzY5MDgxMzM0IiwicmVzb3VyY2VfY2hhdF9pZCI6Ijk0MzFhMmUwLTc5MjYtNGE3Yy04NDhhLWJkZDU2ZmIwMzhmYSJ9.99OvyFwOVuUt-Lmt0WvMKvo17gVGjdeEWDEEEpa8Jf0') center/cover no-repeat;
+      box-shadow: 0 34px 80px rgba(4, 44, 86, 0.25);
+    }
+
+    .hero::before {
+      content: "";
+      position: absolute;
+      inset: -28%;
+      z-index: -1;
+      background:
+        conic-gradient(from 130deg at 50% 50%, transparent, rgba(53, 216, 255, 0.46), transparent, rgba(22, 119, 255, 0.36), transparent),
+        radial-gradient(circle at 24% 28%, rgba(255, 255, 255, 0.28), transparent 26rem);
+      animation: aurora 14s ease-in-out infinite alternate;
+      filter: blur(10px);
+    }
+
+    .hero::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      z-index: -1;
+      background:
+        linear-gradient(180deg, rgba(255, 255, 255, 0.06), rgba(255, 255, 255, 0.22)),
+        radial-gradient(circle at 78% 72%, rgba(255, 255, 255, 0.22), transparent 22rem);
+    }
+
+    @keyframes aurora {
+      from { transform: translate3d(-2%, -1%, 0) rotate(0deg) scale(1); }
+      to { transform: translate3d(2%, 2%, 0) rotate(16deg) scale(1.08); }
+    }
+
+    .channel-badge {
+      position: absolute;
+      top: 24px;
+      right: 30px;
+      z-index: 2;
+      padding: 0.58rem 0.95rem;
+      border: 1px solid rgba(255, 255, 255, 0.42);
+      border-radius: 999px;
+      color: #eaf9ff;
+      font-size: 0.8rem;
+      font-weight: 700;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      background: rgba(3, 35, 74, 0.34);
+      box-shadow: 0 14px 34px rgba(2, 18, 45, 0.25);
+      backdrop-filter: blur(16px);
+    }
+
+    .hero-content {
+      position: relative;
+      width: min(980px, calc(100% - 32px));
+      display: grid;
+      justify-items: center;
+      gap: 1rem;
+      text-align: center;
+    }
+
+    .eyebrow {
+      padding: 0.5rem 0.9rem;
+      border: 1px solid rgba(255, 255, 255, 0.36);
+      border-radius: 999px;
+      color: rgba(235, 249, 255, 0.92);
+      font-size: 0.78rem;
+      font-weight: 700;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      background: rgba(255, 255, 255, 0.1);
+      backdrop-filter: blur(14px);
+    }
+
+    .big-title {
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(4rem, 12vw, 8rem);
+      color: rgba(255, 255, 255, 0.96);
+      letter-spacing: 0.1em;
+      line-height: 0.9;
+      text-transform: uppercase;
+      text-shadow:
+        0 5px 0 rgba(5, 54, 111, 0.72),
+        0 24px 52px rgba(0, 20, 52, 0.36),
+        0 0 44px rgba(53, 216, 255, 0.46);
+    }
+
+    .hero-subtitle {
+      max-width: 620px;
+      color: rgba(242, 251, 255, 0.88);
+      font-size: 1rem;
+      line-height: 1.7;
+    }
+
+    .hero-orb {
+      position: absolute;
+      border-radius: 50%;
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      background: linear-gradient(135deg, rgba(255, 255, 255, 0.22), rgba(53, 216, 255, 0.08));
+      box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.3), 0 20px 50px rgba(2, 28, 68, 0.18);
+      backdrop-filter: blur(12px);
+      animation: float 9s ease-in-out infinite;
+    }
+
+    .hero-orb.one { width: 115px; height: 115px; left: 8%; bottom: 52px; }
+    .hero-orb.two { width: 76px; height: 76px; right: 11%; top: 88px; animation-delay: -3.5s; }
+
+    @keyframes float {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-18px); }
+    }
+
+    /* ===== NAV ===== */
+    .nav-container {
+      position: sticky;
+      top: 14px;
+      z-index: 30;
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 0.7rem;
+      width: min(1080px, calc(100% - 28px));
+      margin: -1.55rem auto 1.8rem;
+      padding: 0.75rem;
+      border: 1px solid rgba(255, 255, 255, 0.72);
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.72);
+      box-shadow: var(--shadow);
+      backdrop-filter: blur(20px);
+    }
+
+    .nav-container button {
+      position: relative;
+      min-width: 128px;
+      min-height: 48px;
+      overflow: hidden;
+      border: 1px solid rgba(22, 119, 255, 0.14);
+      border-radius: 999px;
+      color: var(--blue);
+      font-weight: 800;
+      letter-spacing: 0.01em;
+      cursor: pointer;
+      background: linear-gradient(135deg, rgba(255, 255, 255, 0.98), rgba(224, 246, 255, 0.84));
+      box-shadow: 0 10px 22px rgba(10, 91, 180, 0.1);
+      transition: transform 0.25s ease, box-shadow 0.25s ease, color 0.25s ease, border-color 0.25s ease;
+    }
+
+    .nav-container button::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      z-index: -1;
+      opacity: 0;
+      background: linear-gradient(135deg, var(--blue), var(--cyan));
+      transition: opacity 0.25s ease;
+    }
+
+    .nav-container button::after {
+      content: "";
+      position: absolute;
+      top: -85%;
+      left: -45%;
+      width: 42px;
+      height: 240%;
+      background: rgba(255, 255, 255, 0.52);
+      transform: rotate(24deg) translateX(-120px);
+      transition: transform 0.56s ease;
+    }
+
+    .nav-container button:hover,
+    .nav-container button:focus-visible {
+      transform: translateY(-4px);
+      color: #fff;
+      border-color: rgba(255, 255, 255, 0.64);
+      box-shadow: 0 18px 36px rgba(22, 119, 255, 0.3), 0 0 0 6px rgba(53, 216, 255, 0.12);
+      outline: none;
+    }
+
+    .nav-container button:hover::before,
+    .nav-container button:focus-visible::before { opacity: 1; }
+
+    .nav-container button:hover::after,
+    .nav-container button:focus-visible::after { transform: rotate(24deg) translateX(260px); }
+
+    /* ===== LAYOUT ===== */
+    .cabinet-shell {
+      width: min(1140px, calc(100% - 28px));
+      margin: 0 auto;
+    }
+
+    .section {
+      width: 100%;
+      margin: 0 auto;
+      padding: 1.6rem 0 2.6rem;
+      animation: fadeIn 0.35s ease;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(12px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .section-title,
+    #about h2 {
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(2.1rem, 5vw, 3rem);
+      color: var(--blue);
+      text-align: center;
+      margin-bottom: 1.4rem;
+      text-shadow: 0 14px 32px rgba(22, 119, 255, 0.22);
+    }
+
+    .section-title::after,
+    #about h2::after {
+      content: "";
+      display: block;
+      width: 92px;
+      height: 4px;
+      margin: 0.7rem auto 0;
+      border-radius: 999px;
+      background: linear-gradient(90deg, var(--blue), var(--cyan));
+      box-shadow: 0 0 24px rgba(53, 216, 255, 0.58);
+    }
+
+    .glass-panel,
+    .profile-section {
+      border: 1px solid rgba(255, 255, 255, 0.78);
+      border-radius: var(--radius-xl);
+      background: var(--glass);
+      box-shadow: var(--shadow);
+      backdrop-filter: blur(20px);
+    }
+
+    /* ===== PROFILE ===== */
+    .profile-section {
+      position: relative;
+      max-width: 760px;
+      overflow: hidden;
+      margin: 0 auto;
+      padding: 2rem;
+      text-align: center;
+    }
+
+    .profile-section::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background:
+        radial-gradient(circle at 12% 10%, rgba(53, 216, 255, 0.24), transparent 22rem),
+        radial-gradient(circle at 88% 0%, rgba(22, 119, 255, 0.16), transparent 20rem);
+      pointer-events: none;
+    }
+
+    .profile-main,
+    .achievements-box {
+      position: relative;
+      z-index: 1;
+    }
+
+    .profile-main {
+      display: grid;
+     grid-template-columns: 1fr;
+      gap: 1.1rem;
+      align-items: center;
+      grid-template-columns: 1fr;
+      gap: 1.1rem;
+    }
+
+    .avatar-wrap {
+      position: relative;
+      justify-self: center;
+      margin: 0 auto;
+      width: 154px;
+      height: 154px;
+      display: grid;
+      place-items: center;
+      border-radius: 50%;
+      background: conic-gradient(from 180deg, var(--cyan), var(--blue), #9bdfff, var(--cyan));
+      box-shadow: 0 20px 48px rgba(22, 119, 255, 0.24), 0 0 0 8px rgba(255, 255, 255, 0.42);
+    }
+
+    .avatar-img {
+      width: 138px;
+      height: 138px;
+      border-radius: 50%;
+      object-fit: cover;
+      border: 5px solid rgba(255, 255, 255, 0.92);
+      background: #dff3ff;
+    }
+
+    .profile-copy {
+      width: 100%;
+      min-width: 0;
+    }
+
+    .welcome {
+      margin-bottom: 0.45rem;
+      color: var(--muted);
+      font-size: 1rem;
+    }
+
+    .welcome strong {
+      display: block;
+      color: var(--ink);
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(2rem, 5vw, 3rem);
+      line-height: 1.05;
+    }
+
+    .stats-grid {
+      display: grid;
+     grid-template-columns: repeat(3, minmax(105px, 1fr));
+      gap: 0.65rem;
+      width: min(520px, 100%);
+      margin: 1rem auto 0;
+    }
+
+    .stat-card {
+       padding: 0.7rem 0.85rem;
+      border: 1px solid rgba(22, 119, 255, 0.13);
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.66);
+      box-shadow: 0 10px 22px rgba(7, 42, 83, 0.08);
+    }
+
+    .stat-label {
+      display: block;
+      margin-bottom: 0.16rem;
+      color: var(--muted);
+      font-size: 0.68rem;
+      font-weight: 700;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+    }
+
+    .stat-card span:last-child,
+    .stat-card strong {
+      color: var(--blue);
+      font-size: 1.02rem;
+      font-weight: 800;
+    }
+
+    .xp-label {
+      display: flex;
+      justify-content: space-between;
+      gap: 1rem;
+        width: min(520px, 100%);
+      margin: 0.9rem auto 0;
+      color: var(--muted);
+      font-size: 0.88rem;
+      font-weight: 700;
+    }
+
+    .xp-bar {
+      width: min(520px, 100%);
+      height: 24px;
+       margin: 0.55rem auto 0;
+      padding: 3px;
+      overflow: hidden;
+      border-radius: 999px;
+      background: linear-gradient(180deg, rgba(210, 235, 250, 0.95), rgba(168, 217, 244, 0.88));
+      box-shadow: inset 0 2px 8px rgba(4, 35, 74, 0.15), 0 10px 22px rgba(22, 119, 255, 0.12);
+    }
+
+    .course-rank {
+      width: min(520px, 100%);
+      margin: 0.7rem auto 0;
+      padding: 0.72rem 1rem;
+      border: 1px solid rgba(22, 119, 255, 0.16);
+      border-radius: 18px;
+      color: var(--ink);
+      font-size: 0.92rem;
+      font-weight: 800;
+      background: rgba(255, 255, 255, 0.72);
+      box-shadow: 0 10px 22px rgba(7, 42, 83, 0.08);
+    }
+
+    .course-rank strong {
+      color: var(--blue);
+    }
+    
+    .xp-fill {
+      width: 0%;
+      height: 100%;
+      border-radius: 999px;
+      background: linear-gradient(90deg, var(--blue), var(--cyan));
+      box-shadow: 0 0 16px rgba(53, 216, 255, 0.66), inset 0 2px 6px rgba(255, 255, 255, 0.38);
+      transition: width 1s ease, background 0.4s ease, box-shadow 0.4s ease;
+    }
+
+    .achievements-box {
+      margin-top: 1.5rem;
+      padding-top: 1.4rem;
+      border-top: 1px solid rgba(22, 119, 255, 0.14);
+      text-align: center;
+    }
+
+    .achievements-box h3 {
+      margin-bottom: 1rem;
+      color: var(--ink);
+      font-size: 1.1rem;
+    }
+
+    #course-tabs {
+      position: relative;
+      z-index: 2;
+    }
+
+    /* ===== GRIDS / CARDS ===== */
+    .lessons-grid,
+    .shop-grid {
+      display: grid;
+      gap: 1.15rem;
+    }
+
+    .lessons-grid { grid-template-columns: repeat(auto-fit, minmax(230px, 1fr)); }
+    .shop-grid { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+
+    .lesson-card,
+    .shop-item {
+      position: relative;
+      overflow: hidden;
+      min-height: 138px;
+      padding: 1.45rem;
+      border: 1px solid rgba(255, 255, 255, 0.78);
+      border-radius: var(--radius-lg);
+      text-align: center;
+      background: linear-gradient(145deg, rgba(255, 255, 255, 0.88), rgba(225, 246, 255, 0.68));
+      box-shadow: 0 16px 42px rgba(7, 42, 83, 0.12);
+      backdrop-filter: blur(18px);
+      transition: transform 0.28s ease, box-shadow 0.28s ease, border-color 0.28s ease;
+    }
+
+    .lesson-card::before,
+    .shop-item::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      opacity: 0;
+      background: radial-gradient(circle at top left, rgba(53, 216, 255, 0.3), transparent 48%);
+      pointer-events: none;
+      transition: opacity 0.28s ease;
+    }
+
+    .lesson-card:hover,
+    .shop-item:hover {
+      transform: translateY(-7px);
+      border-color: rgba(53, 216, 255, 0.58);
+      box-shadow: var(--shadow-strong);
+    }
+
+    .lesson-card:hover::before,
+    .shop-item:hover::before { opacity: 1; }
+
+    .price { color: var(--blue); font-weight: 800; }
+
+    .coins-pill {
+      width: fit-content;
+      margin: 0 auto 1.25rem;
+      padding: 0.75rem 1.15rem;
+      border: 1px solid rgba(22, 119, 255, 0.16);
+      border-radius: 999px;
+      color: var(--blue);
+      font-weight: 800;
+      background: rgba(255, 255, 255, 0.76);
+      box-shadow: 0 12px 28px rgba(22, 119, 255, 0.12);
+      backdrop-filter: blur(14px);
+    }
+
+    /* ===== BUTTONS ===== */
+    .lesson-btn,
+    .buy-btn,
+    .big-form-btn,
+    #support-chat button {
+      position: relative;
+      display: inline-block;
+      overflow: hidden;
+      margin-top: 0.65rem;
+      padding: 0.78rem 1.6rem;
+      border: 0;
+      border-radius: 999px;
+      color: #fff;
+      font-weight: 800;
+      text-decoration: none;
+      cursor: pointer;
+      background: linear-gradient(135deg, var(--blue), var(--blue-2) 54%, var(--cyan));
+      box-shadow: 0 14px 32px rgba(22, 119, 255, 0.28);
+      transition: transform 0.25s ease, box-shadow 0.25s ease, filter 0.25s ease;
+    }
+
+    .lesson-btn:hover,
+    .buy-btn:hover,
+     .big-form-btn:hover,
+    #support-chat button:hover {
+      transform: translateY(-3px) scale(1.025);
+      box-shadow: 0 20px 48px rgba(22, 119, 255, 0.36), 0 0 0 6px rgba(53, 216, 255, 0.12);
+      filter: saturate(1.08);
+    }
+
+   .big-form-btn {
+      padding: 1.15rem 2.35rem;
+      font-size: 1.05rem;
+    }
+
+    textarea,
+    input[type="file"] {
+      width: 100%;
+      padding: 0.9rem;
+      border: 1px solid rgba(22, 119, 255, 0.22);
+      border-radius: var(--radius-md);
+      color: var(--ink);
+      background: rgba(255, 255, 255, 0.84);
+      outline: none;
+      transition: border-color 0.2s ease, box-shadow 0.2s ease;
+    }
+
+    textarea:focus,
+    input[type="file"]:focus {
+      border-color: rgba(22, 119, 255, 0.62);
+      box-shadow: 0 0 0 5px rgba(53, 216, 255, 0.14);
+    }
+
+    /* ===== SPECIAL SECTIONS ===== */
+    .center-panel {
+      max-width: 680px;
+      margin: 0 auto;
+      padding: 2rem;
+      text-align: center;
+    }
+
+    .announcement-list p { margin: 0.5rem 0; color: var(--muted); line-height: 1.7; }
+    .announcement-list strong { color: var(--blue); }
+
+    #about > div {
+      max-width: 900px !important;
+      padding: 2.2rem !important;
+      border: 1px solid rgba(255, 255, 255, 0.78);
+      border-radius: var(--radius-xl);
+      background: var(--glass);
+      box-shadow: var(--shadow);
+      backdrop-filter: blur(20px);
+    }
+
+    #about h3 { color: var(--blue); }
+
+    #about div[style*="width: 200px"] {
+      width: 230px !important;
+      padding: 1.15rem;
+      border: 1px solid rgba(22, 119, 255, 0.14);
+      border-radius: var(--radius-lg);
+      background: rgba(255, 255, 255, 0.66);
+      box-shadow: 0 14px 32px rgba(7, 42, 83, 0.1);
+    }
+
+    .schedule-panel {
+      width: min(760px, 100%);
+      max-width: 760px;
+      margin: 0 auto;
+      padding: 2rem;
+      text-align: center;
+    }
+    #schedule {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    #schedule.hidden { display: none !important; }
+
+    .schedule-block-title {
+      color: var(--blue);
+      font-size: 0.82rem;
+      font-weight: 800;
+      letter-spacing: 0.09em;
+      text-transform: uppercase;
+    }
+
+    #lesson-link,
+    #lesson-schedule {
+      margin-top: 0.45rem;
+      color: var(--muted);
+      line-height: 1.7;
+      word-break: break-word;
+    }
+
+    /* ===== NOTIFICATIONS ===== */
+    #notify-btn {
+      position: fixed;
+      top: 86px;
+      right: 28px;
+      z-index: 9999;
+      min-width: 178px;
+      min-height: 48px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.55rem;
+      padding: 0.72rem 1rem;
+      border: 1px solid rgba(255, 255, 255, 0.5);
+      border-radius: 999px;
+      color: #eaf9ff;
+      font-size: 0.9rem;
+      font-weight: 800;
+      letter-spacing: 0.02em;
+      cursor: pointer;
+      background: linear-gradient(135deg, rgba(5, 34, 70, 0.58), rgba(22, 119, 255, 0.48));
+      box-shadow: 0 16px 38px rgba(2, 28, 68, 0.24);
+      backdrop-filter: blur(18px);
+      transition: transform 0.25s ease, box-shadow 0.25s ease, background 0.25s ease;
+    }
+
+    .notify-icon {
+      display: inline-grid;
+      place-items: center;
+      width: 30px;
+      height: 30px;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, 0.18);
+      box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.32);
+    }
+
+
+    #notify-btn:hover {
+      transform: translateY(-3px);
+      background: linear-gradient(135deg, rgba(22, 119, 255, 0.7), rgba(53, 216, 255, 0.55));
+      box-shadow: 0 22px 54px rgba(22, 119, 255, 0.34), 0 0 0 7px rgba(53, 216, 255, 0.12);
+      }
+
+    #notify-count {
+      position: absolute;
+      top: -7px;
+      right: -7px;
+      min-width: 22px;
+      height: 22px;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 0 6px;
+      border: 2px solid white;
+      border-radius: 999px;
+      color: white;
+      font-size: 0.72rem;
+      background: #ff4d7d;
+      box-shadow: 0 8px 18px rgba(255, 77, 125, 0.35);
+    }
+
+    #notify-panel {
+      position: fixed;
+      top: 144px;
+      right: 28px;
+      z-index: 9998;
+      width: min(380px, calc(100vw - 34px));
+      max-height: min(520px, calc(100vh - 170px));
+      overflow: hidden;
+      border: 1px solid rgba(255, 255, 255, 0.74);
+      border-radius: 28px;
+      background: rgba(255, 255, 255, 0.92);
+      box-shadow: var(--shadow-strong);
+      backdrop-filter: blur(20px);
+    }
+
+    .notify-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1rem;
+      padding: 1rem 1rem 0.8rem;
+      border-bottom: 1px solid rgba(22, 119, 255, 0.12);
+    }
+
+    .notify-head strong { color: var(--blue); }
+
+    .notify-head button {
+      border: 0;
+      color: var(--blue);
+      font-weight: 800;
+      cursor: pointer;
+      background: transparent;
+    }
+
+    #notify-list {
+      max-height: 390px;
+      overflow-y: auto;
+      padding: 0.85rem;
+      scrollbar-width: thin;
+      scrollbar-color: rgba(22, 119, 255, 0.42) transparent;
+    }
+
+    .notify-empty {
+      padding: 1.2rem 0.8rem;
+      color: var(--muted);
+      text-align: center;
+      line-height: 1.6;
+    }
+
+    .notify-item {
+      position: relative;
+      padding: 0.9rem 0.95rem;
+      border: 1px solid rgba(22, 119, 255, 0.12);
+      border-radius: 18px;
+      background: linear-gradient(145deg, rgba(255,255,255,0.9), rgba(231,247,255,0.72));
+      box-shadow: 0 10px 24px rgba(7, 42, 83, 0.08);
+    }
+
+    .notify-item + .notify-item { margin-top: 0.75rem; }
+
+    .notify-item.unread::before {
+      content: "";
+      position: absolute;
+      top: 1rem;
+      right: 1rem;
+      width: 9px;
+      height: 9px;
+      border-radius: 50%;
+      background: #ff4d7d;
+      box-shadow: 0 0 14px rgba(255, 77, 125, 0.55);
+    }
+
+    .notify-title {
+      padding-right: 1.2rem;
+      color: var(--ink);
+      font-weight: 800;
+    }
+
+    .notify-text {
+      margin-top: 0.35rem;
+      color: var(--muted);
+      font-size: 0.9rem;
+      line-height: 1.55;
+    }
+
+    .notify-date {
+      margin-top: 0.5rem;
+      color: rgba(95, 127, 154, 0.78);
+      font-size: 0.74rem;
+      font-weight: 700;
+    }
+
+    
+    /* ===== SUPPORT ===== */
+    #support-btn {
+      position: fixed;
+      right: 22px;
+      bottom: 22px;
+      z-index: 9999;
+      width: 62px;
+      height: 62px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 50%;
+      color: white;
+      font-size: 28px;
+      font-weight: 800;
+      cursor: pointer;
+      background: linear-gradient(135deg, var(--blue), var(--cyan));
+      box-shadow: 0 18px 42px rgba(22, 119, 255, 0.38);
+      transition: transform 0.25s ease, box-shadow 0.25s ease;
+    }
+
+    #support-btn:hover {
+      transform: translateY(-4px) rotate(6deg);
+      box-shadow: 0 22px 54px rgba(22, 119, 255, 0.46), 0 0 0 7px rgba(53, 216, 255, 0.13);
+    }
+
+    #support-chat {
+      position: fixed;
+      right: 22px;
+      bottom: 98px;
+      z-index: 9999;
+      width: min(340px, calc(100vw - 34px));
+      padding: 1rem;
+      border: 1px solid rgba(255, 255, 255, 0.74);
+      border-radius: 26px;
+      background: rgba(255, 255, 255, 0.9);
+      box-shadow: var(--shadow-strong);
+      backdrop-filter: blur(20px);
+    }
+
+    #support-messages {
+      scrollbar-width: thin;
+      scrollbar-color: rgba(22, 119, 255, 0.42) transparent;
+    }
+
+    /* ===== 14 FEB HEARTS ===== */
+    .hearts-container {
+      position: fixed;
+      inset: 0;
+      z-index: 9999;
+      overflow: hidden;
+      pointer-events: none;
+    }
+
+    .heart {
+      position: absolute;
+      top: -20px;
+      font-size: 20px;
+      opacity: 0.8;
+      animation: fall linear forwards;
+      filter: drop-shadow(0 8px 12px rgba(22, 119, 255, 0.2));
+    }
+
+    @keyframes fall {
+      to { transform: translateY(110vh) rotate(16deg); opacity: 0.9; }
+    }
+
+    @media (max-width: 1024px) {
+      .shop-grid { grid-template-columns: repeat(3, 1fr); }
+      .hero-orb.one { left: 3%; }
+      .hero-orb.two { right: 4%; }
+    }
+
+    @media (max-width: 768px) {
+      .hero { min-height: 280px; border-bottom-left-radius: 34px; border-bottom-right-radius: 34px; }
+      .channel-badge { top: 16px; right: 16px; font-size: 0.68rem; }
+      .hero-subtitle { font-size: 0.92rem; }
+      .hero-orb { display: none; }
+      .nav-container { position: relative; top: auto; margin-top: 1rem; border-radius: 28px; }
+      .nav-container button { min-width: calc(50% - 0.5rem); }
+      .profile-main { grid-template-columns: 1fr; text-align: center; justify-items: center; }
+      .stats-grid { grid-template-columns: 1fr; }
+      .shop-grid { grid-template-columns: repeat(2, 1fr); }
+      .profile-section, .center-panel, .schedule-panel { padding: 1.45rem; }
+    }
+
+    @media (max-width: 480px) {
+      .big-title { letter-spacing: 0.05em; }
+      .nav-container button { min-width: 100%; }
+      .shop-grid { grid-template-columns: 1fr; }
+      .section-title { font-size: 1.85rem; }
+      #notify-btn { top: 72px; right: 16px; min-width: 54px; min-height: 46px; padding: 0.6rem; }
+      .notify-label { display: none; }
+      #notify-panel { top: 128px; right: 16px; bottom: auto; }
+      #support-btn { right: 16px; bottom: 16px; }
+      #support-chat { right: 16px; bottom: 90px; }
+    }
+  </style>
+</head>
+
+<body>
+
+  <header class="hero">
+    <div class="channel-badge">t.me/apego_pr</div>
+    <div class="hero-orb one"></div>
+    <div class="hero-orb two"></div>
+
+    <div class="hero-content">
+      <div class="eyebrow">student space</div>
+      <div class="big-title">Subtext</div>
+      <p class="hero-subtitle">Твой личный учебный космос: уроки, прогресс, расписание, материалы и награды в одном месте.</p>
+    </div>
+  </header>
+
+  <div id="loading">Загрузка...</div>
+
+  <main id="main" class="hidden">
+    <nav class="nav-container" aria-label="Навигация по кабинету">
+      <button onclick="showSection('profile')">Профиль</button>
+      <button onclick="showSection('lessons')">Уроки</button>
+        <button onclick="showSection('submission')">ДЗ</button>
+      <button onclick="showSection('shop')">Магазин</button>
+      <button onclick="showSection('schedule')">Расписание</button>
+      <button onclick="showSection('materials')">Материалы</button>
+      <button onclick="showSection('announcements')">Объявления</button>
+      <button onclick="showSection('about')">О нас</button>
+    </nav>
+
+    <div class="cabinet-shell">
+      <!-- ===== ПРОФИЛЬ ===== -->
+      <section id="profile" class="section profile-section">
+        <div class="profile-main">
+          <div class="avatar-wrap">
+            <img id="avatar-img" class="avatar-img" alt="Аватар ученика">
+          </div>
+
+          <div class="profile-copy">
+            <p class="welcome">Привет, <strong id="username"></strong></p>
+
+            <div class="stats-grid">
+              <div class="stat-card">
+                <span class="stat-label">Уровень</span>
+                <span id="level"></span>
+              </div>
+              <div class="stat-card">
+                <span class="stat-label">Монеты</span>
+                <span id="coins"></span>
+              </div>
+              <div class="stat-card">
+                <span class="stat-label">Баллы</span>
+                <span><span id="progress"></span> / 100</span>
+              </div>
+            </div>
+
+            <div class="xp-label">
+              <span>Прогресс обучения</span>
+              <span>XP</span>
+            </div>
+           <div class="xp-bar" aria-label="Прогресс по выбранному предмету">
+              <div class="xp-fill" id="xp-fill"></div>
+            </div>
+            <div class="course-rank" id="course-rank">Рейтинг по предмету пока не указан</div>
+          </div>
+        </div>
+
+        <div class="achievements-box">
+          <h3>🏆 Мои достижения</h3>
+          <div id="achievements-list" style="display:flex;flex-wrap:wrap;gap:12px;justify-content:center"></div>
+        </div>
+      </section>
+
+      <!-- ===== УРОКИ ===== -->
+      <section id="lessons" class="section hidden">
+        <div class="section-title">Уроки</div>
+        <div id="lessons-list" class="lessons-grid"></div>
+      </section>
+
+      <!-- ===== ДЗ ===== -->
+       <section id="submission" class="section hidden">
+        <div class="section-title">Сдать домашнее задание</div>
+        <div class="glass-panel center-panel">
+          <p style="margin-bottom:1.5rem;color:var(--muted);line-height:1.7">
+            Нажмите кнопку ниже, чтобы открыть форму для отправки ДЗ.
+          </p>
+          <a
+           id="submission-form-link"
+            href="#"
+            target="_blank"
+             rel="noopener"
+            class="big-form-btn hidden">
+            📄 Открыть форму ДЗ
+          </a>
+           <p id="submission-form-empty" style="color:var(--muted);line-height:1.7">
+            Форма для выбранного предмета пока не назначена.
+          </p>
+        </div>
+      </section>
+
+      <!-- ===== МАГАЗИН ===== -->
+      <section id="shop" class="section hidden">
+        <div class="section-title">Магазин</div>
+        <p class="coins-pill">💰 Монеты: <span id="shop-coins">0</span></p>
+        <div id="shop-items" class="shop-grid"></div>
+      </section>
+
+      <!-- ===== ОБЪЯВЛЕНИЯ ===== -->
+      <section id="announcements" class="section hidden">
+        <div class="section-title">Объявления</div>
+        <div class="glass-panel center-panel announcement-list">
+          <p><strong>24 февраля</strong></p>
+          <p>
+            ⚙️ С 15:00 до 17:00 возможны технические работы на сайте в разделе "Слоты".
+            В это время запись на занятия будет не доступна.
+          </p>
+          <hr>
+
+          <p><strong>19 февраля</strong></p>
+          <p>
+            ⚙️ С 13:00 до 15:00 возможны технические работы на сайте.
+            В это время некоторые разделы могут временно не работать.
+          </p>
+          <hr>
+
+          <p><strong>14 февраля</strong></p>
+          <p>
+            Happy Valentine’s Day! 💗<br>
+            Collect love, spread kindness, and level up your happiness today.
+          </p>
+          <hr>
+
+          <p><strong>12 февраля</strong></p>
+          <p>
+            ⚙️ С 12:00 до 15:00 возможны технические работы на сайте.
+            В это время некоторые разделы могут временно не работать.
+          </p>
+          <hr>
+
+          <p><strong>4 февраля</strong></p>
+          <p>
+            🎉 Запуск образовательной платформы Subtext!
+            Теперь все материалы, расписание, домашние задания и прогресс доступны в личном кабинете.
+          </p>
+        </div>
+      </section>
+
+      <!-- ====================== РАЗДЕЛ "О НАС" ====================== -->
+      <section id="about" class="section hidden">
+        <h2 style="text-align:center;margin-bottom:40px;">О нас</h2>
+
+        <div style="max-width:800px;margin:0 auto;padding:0 20px;">
+          <div style="text-align:center;font-size:1.08rem;line-height:1.8;color:#333;margin-bottom:50px;">
+            Мы — Subtext, современная образовательная платформа, которая помогает ученикам уверенно осваивать английский язык, математику и физику. Скоро будут и другие предметы!<br><br>
+            Работаем с 2025 года и помогаем ученикам достичь своих целей.
+          </div>
+
+          <h3 style="text-align:center;margin:40px 0 30px;font-size:1.4rem;">Наши преподаватели</h3>
+
+          <div style="display:flex;flex-wrap:wrap;gap:35px;justify-content:center;">
+            <div style="text-align:center;width:200px;">
+              <div style="width:150px;height:150px;margin:0 auto 15px;border-radius:50%;overflow:hidden;box-shadow:0 6px 20px rgba(0,0,0,0.12);">
+                <img src="https://i.imgur.com/3rk6gSA.jpeg" style="width:100%;height:100%;object-fit:cover;" alt="Полина Дмитриевна">
+              </div>
+              <strong style="font-size:1.1rem;">Полина Дмитриевна</strong><br>
+              <small style="color:#555;">Преподаватель английского языка</small>
+              <p style="font-size:0.92rem;margin-top:10px;color:#666;line-height:1.5;">
+                Работаю с учениками всех возрастов: помогаю детям учиться с интересом, а взрослым — уверенно достигать поставленных целей.
+              </p>
+            </div>
+
+            <div style="text-align:center;width:200px;">
+              <div style="width:150px;height:150px;margin:0 auto 15px;border-radius:50%;overflow:hidden;box-shadow:0 6px 20px rgba(0,0,0,0.12);">
+                <img src="https://i.imgur.com/cH16EwE.jpeg" style="width:100%;height:100%;object-fit:cover;" alt="Татьяна Николаевна">
+              </div>
+              <strong style="font-size:1.1rem;">Татьяна Николаевна</strong><br>
+              <small style="color:#555;">Преподаватель физики и математики</small>
+              <p style="font-size:0.92rem;margin-top:10px;color:#666;line-height:1.5;">
+                Стаж преподавательской деятельности 35 лет. Учитель высшей категории по физике. Готовлю учеников к ОГЭ.
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ===== МАТЕРИАЛЫ ===== -->
+      <section id="materials" class="section hidden">
+        <div class="section-title">Материалы</div>
+        <div id="materials-list" class="lessons-grid"></div>
+      </section>
+
+      <!-- ===== РАСПИСАНИЕ ===== -->
+      <section id="schedule" class="section hidden">
+        <div class="section-title">Расписание</div>
+
+        <div class="glass-panel schedule-panel">
+          <p class="schedule-block-title">Ссылка</p>
+          <p id="lesson-link">—</p>
+
+          <hr>
+
+          <p class="schedule-block-title">Общее расписание</p>
+          <p id="lesson-schedule">—</p>
+
+          <hr>
+
+          <p class="schedule-block-title">Доступные слоты</p>
+          <div id="slots-container"></div>
+
+          <hr>
+
+          <p class="schedule-block-title">Групповые занятия</p>
+          <div id="group-slots-container"></div>
+        </div>
+      </section>
+    </div>
+  </main>
+
+   <!-- ===== NOTIFICATIONS ===== -->
+  <div id="notify-btn" onclick="toggleNotifications()" title="Уведомления">
+    <span class="notify-icon">🔔</span>
+    <span class="notify-label">Уведомления</span>
+    <span id="notify-count">0</span>
+  </div>
+
+  <div id="notify-panel" class="hidden">
+    <div class="notify-head">
+      <strong>Уведомления</strong>
+      <button type="button" onclick="markNotificationsRead()">прочитано</button>
+    </div>
+    <div id="notify-list">
+      <div class="notify-empty">Пока нет уведомлений</div>
+    </div>
+  </div>
+  
+  <!-- ===== SUPPORT BUTTON ===== -->
+  <div id="support-btn" onclick="toggleSupport()">?</div>
+
+  <div id="support-chat" class="hidden">
+    <div id="support-messages" style="max-height:200px;overflow-y:auto;margin-bottom:10px"></div>
+    <textarea id="support-input" placeholder="Ваш вопрос..." style="margin-bottom:8px"></textarea>
+    <button onclick="sendSupport()">Отправить</button>
+  </div>
+
+  <script src="subtext.js?v=20260531"></script>
+
+  <div class="hearts-container" id="hearts"></div>
+
+  <script>
+  function startHearts() {
+    const container = document.getElementById("hearts");
+
+    setInterval(() => {
+      const heart = document.createElement("div");
+      heart.className = "heart";
+      heart.innerHTML = "💗";
+
+      heart.style.left = Math.random() * 100 + "vw";
+      heart.style.fontSize = (16 + Math.random() * 20) + "px";
+      heart.style.animationDuration = (4 + Math.random() * 4) + "s";
+
+      container.appendChild(heart);
+
+      setTimeout(() => heart.remove(), 8000);
+    }, 300);
+  }
+
+  // ===== Включаем сердечки ТОЛЬКО 13-15 февраля =====
+  const today = new Date();
+  const day = today.getDate();
+  const month = today.getMonth();
+  if (month === 1 && day >= 13 && day <= 15) {
+    startHearts();
+  }
+  </script>
+</body>
+</html>
